@@ -64,12 +64,12 @@ let likeButton;
 let unlikeButton;
 
 const Post = ({post}) => {
-		unlikeButton = <MdHeart color="#f00000" onClick={() => unlikePost(post.id) }  />;
 	if(post.userLiked){
+		unlikeButton = <MdHeart color="#f00000" onClick={() => unlikePost(post.id) }  />;
 	}
 	else{
-	}
 		likeButton = <MdHeartOutline color="#fafafa" onClick={() => likePost(post.id) } />;
+	}
 
 	return (
   		<div className="post">
