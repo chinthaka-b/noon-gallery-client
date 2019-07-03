@@ -3,6 +3,8 @@ import Fetch from 'isomorphic-unfetch';
 import Layout from '../components/Layout.js'
 import Posts from '../components/Posts.js'
 
+import config from '../config.json';
+
 const Index = ({posts}) => {
 		return (
 			<Layout>
@@ -23,9 +25,9 @@ const Index = ({posts}) => {
 }
 
 Index.getInitialProps = async ({ req }) => {
-  const res = await fetch('http://localhost:3001/posts');
+  const res = await fetch(`${config.api_url}/posts`);
   const response = await res.json();
-  return { posts: response };
+  return { posts: JSON.stringify(response) };
 };
 
 

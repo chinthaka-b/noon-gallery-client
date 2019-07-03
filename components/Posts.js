@@ -1,6 +1,8 @@
 import MdHeart from 'react-ionicons/lib/MdHeart'
 import MdHeartOutline from 'react-ionicons/lib/MdHeartOutline'
 
+import config from '../config.json';
+
 class Posts extends React.Component {
 
 	state = {'post_liked' : this.props.post.userLiked};
@@ -9,7 +11,7 @@ class Posts extends React.Component {
 		this.setState({post_liked : true}) // update state object when user liked on a post
 		console.log(postId);
 
-		fetch(`http://localhost:3001/post/like/${postId}`, {
+		fetch(`${config.api_url}/post/like/${postId}`, {
 	        method: 'PUT',
 	        headers: {
 	          'Accept': 'application/json',
@@ -23,7 +25,7 @@ class Posts extends React.Component {
 		this.setState({post_liked : false}) // update state object when user dislike on a post
 		console.log(postId);
 
-		fetch(`http://localhost:3001/post/like/${postId}`, {
+		fetch(`${config.api_url}/post/like/${postId}`, {
 	        method: 'PUT',
 	        headers: {
 	          'Accept': 'application/json',
@@ -38,10 +40,10 @@ class Posts extends React.Component {
 		let likeBtn = '';
 		if(this.state.post_liked == false) //if user not liked this post show default icon
 		{
-			likeBtn = <MdHeartOutline color="#fafafa" onClick={e => this.likePost(this.props.post.id)} />;
+			likeBtn = <MdHeartOutline color="#fafafa" onClick={e => this.likePost(this.props.post.post_id)} />;
 		}
 		else{ //if user has liked this post show liked icon (red)
-			likeBtn = <MdHeart color="#f00000" onClick={e => this.unlikePost(this.props.post.id)} />;
+			likeBtn = <MdHeart color="#f00000" onClick={e => this.unlikePost(this.props.post.post_id)} />;
 		}
 	    return (
 	    	<div className="post">
@@ -219,9 +221,8 @@ class Posts extends React.Component {
 }
 
 Posts.getInitialProps = async ({ req }) => {
-  const res = await fetch('http://localhost:3001/like');
+  const res = await fetch(`${config.api_url}/like`);
   const posts = await res.json();
-  console.log('getInitialProps',posts);
   return { posts : posts };
 };
 

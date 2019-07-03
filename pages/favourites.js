@@ -3,6 +3,8 @@ import Fetch from 'isomorphic-unfetch';
 import Layout from '../components/Layout.js'
 import Postsliked from '../components/Postsliked.js'
 
+import config from '../config.json';
+
 const Favourites = ({posts}) => {
 
 	var likedHtml = '';
@@ -40,7 +42,7 @@ const Favourites = ({posts}) => {
 }
 
 Favourites.getInitialProps = async ({ req }) => {
-  const res = await fetch('http://localhost:3001/posts/liked');
+  const res = await fetch(config.api_url +  '/posts/liked');
   const response = await res.json();
 
   return { posts: response };
