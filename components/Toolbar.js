@@ -1,12 +1,14 @@
 import MdHeart from 'react-ionicons/lib/MdHeart'
 import MdHome from 'react-ionicons/lib/MdHome'
 
-export default function Toolbar(props) {
+import Link from 'next/link';
+
+const Toolbar = (props) =>  {
 	return (
 		<nav className="tool-bar">
 			<div className="tool-bar-navigation">
-				<div><MdHome color="white" onClick={() => alert('home') }  /></div> {/* link to home/default page */}
-				<div><MdHeart color="white" onClick={() => alert('favorites') }  /></div> {/*link to favorite posts page*/}
+				<div><Link href="/"><MdHome color="white" /></Link></div> {/* link to home/default page */}
+				<div><Link href="/favourites"><MdHeart color="white" /></Link></div> {/*link to favorite posts page*/}
 			</div>
 			<style jsx>{`
 				.tool-bar {
@@ -52,3 +54,5 @@ export default function Toolbar(props) {
 		</nav> 
 	)
 }
+
+export default Toolbar;

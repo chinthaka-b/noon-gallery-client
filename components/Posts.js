@@ -1,119 +1,94 @@
 import MdHeart from 'react-ionicons/lib/MdHeart'
 import MdHeartOutline from 'react-ionicons/lib/MdHeartOutline'
 
-let likeButton;
-let unlikeButton;
+class Posts extends React.Component {
 
-const getPosts = () => {
-  return posts;
-}
+	state = {'post_liked' : this.props.post.userLiked};
 
-const posts = [
-    {
-    	id: 1,
-    	description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    	likes:20,
-    	hashtags : ['toyota','corolla','E90'],
-    	image : {
-    		title: 'AE92',
-	    	description: 'Toyota Corolla Sedan',
-	    	imgUrl: '../static/img-1.jpeg',
-    	},
-    	user : {
-	    	picUrl : '../static/profile-2.jpg',
-	    	name : 'iambatman',
-    	},
-    	userLiked : false
-    },
-    {
-    	id: 2,
-    	description: 'Cras malesuada eu magna vitae pharetra. Donec tempus ipsum in lacinia iaculis.',
-    	likes:15,
-    	hashtags : ['datsun','510','sss'],
-    	image: {
-    		title: 'SSS',
-    		description : 'Datsun 510',
-    		imgUrl: '../static/img-5.jpeg',
-    	},
-    	user : {
-	    	picUrl : '../static/profile-1.jpg',
-	    	name : 'jarvis',
-    	},
-    	userLiked : false
-    },
-    {
-    	id: 3,
-     	description: 'Donec sit amet justo ut nisl pulvinar dapibus. Praesent placerat turpis at turpis rhoncus pharetra.',
-    	likes:35,
-    	hashtags : ['trueno','hachiRoku','panda','corolla','initialD'],
-     	image: {
-    		title: 'Trueno',
-     		description: 'Toyota Corolla',
-    		imgUrl: '../static/img-7.jpeg',
-     	},
-     	user : {
-	    	picUrl : '../static/profile-3.png',
-	    	name : 'sultanofspeed',
-     	},
-    	userLiked : false
+	likePost = (postId) => {
+		this.setState({post_liked : true}) // update state object when user liked on a post
+		console.log(postId);
 
-    },
-
-  ];
-
-export default function Posts(props) {
-	unlikeButton = <MdHeart color="#f00000" onClick={() => unlikePost(props.id) }  />;
-	likeButton = <MdHeartOutline color="#fafafa" onClick={() => likePost(props.id) } />;
-	if(props.userLiked){
-	}
-	else{
+		fetch(`http://localhost:3001/post/like/${postId}`, {
+	        method: 'PUT',
+	        headers: {
+	          'Accept': 'application/json',
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({status:true})
+	      })
 	}
 
-	return (
-  		<div className="post">
-  			<div >
-  				<div className="userinfo-section">
+	unlikePost = (postId) => {
+		this.setState({post_liked : false}) // update state object when user dislike on a post
+		console.log(postId);
+
+		fetch(`http://localhost:3001/post/like/${postId}`, {
+	        method: 'PUT',
+	        headers: {
+	          'Accept': 'application/json',
+	          'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({status:false})
+	    })
+	}
+
+	render(){
+	
+		let likeBtn = '';
+		if(this.state.post_liked == false) //if user not liked this post show default icon
+		{
+			likeBtn = <MdHeartOutline color="#fafafa" onClick={e => this.likePost(this.props.post.id)} />;
+		}
+		else{ //if user has liked this post show liked icon (red)
+			likeBtn = <MdHeart color="#f00000" onClick={e => this.unlikePost(this.props.post.id)} />;
+		}
+	    return (
+	    	<div className="post">
+	    	
+				<div >
+					<div className="userinfo-section">
 		  			<div className="profile-img">
-	  					<img src={`${props.user.picUrl}`} alt={`${props.user.name}`} /> <p>{props.user.name}</p>
+				  				
+	  					<img src={`${this.props.post.user.picUrl}`} alt={`${this.props.post.user.name}`} /> <p>{this.props.post.user.name} test {this.liked}</p>
 					</div>
 				</div>
-  				<div className="img-container">
-  					<div className="post-img">
-		  				<img src={`${props.image.imgUrl}`} alt={`${props.image.title}`} />
-  					</div>
+					<div className="img-container">
+						<div className="post-img">
+		  				<img src={`${this.props.post.image.imgUrl}`} alt={`${this.props.post.image.title}`} />
+						</div>
 
 		  			<div className="post-info-section">
 		  				<div>
 				  			<div className="img-title-section">
-					  			<div>{props.image.description}</div>
-					  			<div>{props.image.title}</div>
+					  			<div>{this.props.post.image.description}</div>
+					  			<div>{this.props.post.image.title}</div>
 				  			</div>
 				  			<div className="spacer" />
 				  			<div className="like-btn">
-				  				{likeButton}
-				  				{unlikeButton}
+				  				{likeBtn}
 				  			</div>
 		  				</div>
 		  			</div>
-  				</div>
+					</div>
 	  			<div className="post-footer">
 	  				<div className="post-likes-section">
 	  					<div className="post-likes">
-	  						<MdHeart fontSize="20px" color="#003cdc" /><p>{props.likes} Likes</p>
+	  						<MdHeart fontSize="20px" color="#003cdc" /><p>{this.props.post.likes} Likes</p>
 	  					</div>
 	  				</div>
 	  				<div className="post-description">
-						<p>{props.description}</p>
+						<p>{this.props.post.description}</p>
 					</div>
 					<div className="hash-tags">
-						<p>#{props.hashtags.join(' #')}</p>
+						<p>#{this.props.post.hashtags.join(' #')}</p>
 					</div>
 					<div className="view-comments">
 						<p>View 12 comments</p>
 					</div>
-  				</div>
+					</div>
 
-  			</div>
+				</div>
 		  	<style jsx>{`
 
 		  		* {
@@ -141,8 +116,8 @@ export default function Posts(props) {
 		      	
 		  		.profile-img {
 		      		align-items: center;
-    				height:100%;
-    				display: flex;
+					height:100%;
+					display: flex;
 		      	}
 
 				.profile-img img {
@@ -210,9 +185,9 @@ export default function Posts(props) {
 
 				.post-likes {
 		      		align-items: center;
-    				height:100%;
-    				display: flex;
-    				font-size: 13px;
+					height:100%;
+					display: flex;
+					font-size: 13px;
 		      	}
 
 		      	.post-likes p {
@@ -239,5 +214,15 @@ export default function Posts(props) {
 		  	`}
 		  	</style>
 	  	</div>
-	)
+	  	);
+	}
 }
+
+Posts.getInitialProps = async ({ req }) => {
+  const res = await fetch('http://localhost:3001/like');
+  const posts = await res.json();
+  console.log('getInitialProps',posts);
+  return { posts : posts };
+};
+
+export default Posts;
